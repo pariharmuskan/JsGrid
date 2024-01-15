@@ -1,0 +1,96 @@
+﻿@model JsGrid.Models.Client
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+</head>
+<body class="GridBody">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
+
+    <div id="jsGrid"></div>
+
+    <script>
+       
+
+        $("#jsGrid").jsGrid({
+            height: "500px",
+            width: "100%",
+            // filtering: true,
+
+            inserting: true,
+            editing: true,
+            sorting: true,
+            paging: true,
+            autoload: true,
+            pageSize: 12,
+            pageButtonCount: 5,
+
+            deleteConfirm: "Do you really want to delete client?",
+            controller: {
+                loadData: function() {
+                    return $.ajax({
+                        type: "GET",
+                        url: "/Client/ReadData/",
+                        dataType: "json",
+                       
+                    });
+                },
+
+                   insertItem: function(Item) {
+                    return $.ajax({
+                        type: "POST",
+                        url: "/Client/Insert",
+                        data: Item,
+                        dataType: "json"
+                      
+                    });
+                },
+
+                updateItem: function(item) {
+                    return $.ajax({
+                        type: "PUT",
+                        url: "/Client/Edit21/" + item.ID,
+                        data: item,
+                        dataType: "json",
+                        // success: function() {
+                        //     location.reload()
+                        // },
+                    });
+                },
+
+                deleteItem: function(item) {
+                    return $.ajax({
+                        type: "DELETE",
+                        url: "/Client/Destroy/" + item.ID,
+                        data: item,
+                       dataType: "json"
+                    });
+                },
+            },
+            onItemInserted: function () {
+                console.log("error")
+                location.reload();
+            },
+            onItemUpdated: function () {
+                console.log("error")
+                location.reload();
+            },
+
+            fields: [
+                // { name: "id", type: "number", width: 50, readOnly: true },
+                { name: "name", type: "text", width: 150},
+                { name: "age", type: "number", width: 50},
+                { name: "country", type: "text", width: 100 },
+                { name: "address", type: "text", width: 200 },
+                { name: "married", type: "checkbox", title: "Is Married", sorting: false },
+                { type: "control" }
+            ]
+        });
+
+    </script>
+  
+</body>
+</html>
